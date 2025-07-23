@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Isak Skoog</title>
+
+    <!-- Font + Styles -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/style.css" />
+
+    <!-- Alpine.js for interactivity -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <!-- Meta -->
+    <meta name="description" content="Portfolio site of Isak Skoog" />
+    <link rel="icon" href="https://avatars.githubusercontent.com/u/94165266" />
+  </head>
+
+  <body class="bg-gray-950 text-gray-200 font-sans">
+    <div class="max-w-3xl mx-auto px-4 py-10 space-y-20" x-data="{ dark: true }">
+      <!-- Dark mode toggle -->
+      <div class="flex justify-end">
+        <button
+          @click="dark = !dark; document.documentElement.classList.toggle('dark')"
+          class="text-sm text-gray-400 hover:text-white transition"
+        >
+          Toggle Theme
+        </button>
+      </div>
+
+      <!-- Hero -->
+      <section class="text-center fade-in">
+        <h1 class="text-4xl sm:text-5xl font-bold text-accent">Isak Skoog</h1>
+        <p class="mt-3 text-lg text-gray-400">Student · Programmer · Builder</p>
+      </section>
+
+      <!-- About -->
+      <section class="fade-in">
+        <h2 class="text-xl font-semibold text-accent mb-2">About Me</h2>
+        <p class="text-gray-400 leading-relaxed">
+          I'm a Student from Sweden with a background in platform and backend development. I enjoy creating systems, automations and logic with a strong focus on Python, Rust, and system design.
+        </p>
+      </section>
+
+      <!-- Projects: Dynamic GitHub API -->
+      <section class="fade-in" x-data="{ repos: [] }" x-init="
+        fetch('https://api.github.com/users/isakskoog/repos')
+          .then(res => res.json())
+          .then(data => {
+            repos = data
+              .filter(r => !r.fork && !r.archived)
+              .sort((a, b) => b.stargazers_count - a.stargazers_count)
+          })
+      ">
+        <h2 class="text-xl font-semibold text-accent mb-4">Projects</h2>
+        <template x-for="repo in repos" :key="repo.id">
+          <div class="bg-gray-800 p-4 rounded-xl shadow-md mb-3">
+            <a
+              :href="repo.html_url"
+              target="_blank"
+              class="font-bold text-lg text-blue-400 hover:underline"
+              x-text="repo.name"
+            ></a>
+            <p class="text-gray-400 text-sm mt-1" x-text="repo.description || 'No description provided.'"></p>
+            <div class="text-xs text-gray-500 mt-2 flex justify-between">
+              <span x-text="repo.language || 'Unknown'"></span>
+              <span>⭐ <span x-text="repo.stargazers_count"></span></span>
+            </div>
+          </div>
+        </template>
+      </section>
+
+      <!-- Contact -->
+      <section class="fade-in">
+        <h2 class="text-xl font-semibold text-accent mb-2">Get In Touch</h2>
+        <p class="text-gray-400">Feel free to reach out via:</p>
+        <ul class="mt-2 space-y-1 text-blue-400">
+          <li><a href="mailto:skoog.isak@gmail.com" class="hover:underline">Email</a></li>
+          <li><a href="https://github.com/IskSweden" class="hover:underline">GitHub</a></li>
+          <li><a href="https://linkedin.com/in/isakskoog" class="hover:underline">LinkedIn</a></li>
+        </ul>
+      </section>
+    </div>
+  </body>
+</html>
